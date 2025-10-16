@@ -13,6 +13,10 @@ Parameters:
     Type: String
     Default: 10.0.0.0/24
 
+  AmazonLinuxAMIID:
+    Type: AWS::SSM::Parameter::Value<AWS::EC2::Image::Id>
+    Default: /aws/service/ami-amazon-linux-latest/amzn2-ami-hvm-x86_64-gp2
+
 
 Resources:
 
@@ -45,6 +49,7 @@ Resources:
     Properties:
       InternetGatewayId: !Ref IGW
       VpcId: !Ref LabVPC
+
 
 ###########
 # Public Route Table
@@ -117,6 +122,39 @@ Resources:
         - Key: Name
           Value: App
 
+
+###########
+# S3 Bucket
+###########
+  LabS3Bucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      Tags:
+        - Key: Name
+          Value: Lab S3 Bucket
+
+###########
+# EC2 Instance
+###########
+  LabEC2Instance:
+    Type: AWS::EC2::Instance
+    DependsOn:
+      - LabVPC
+      - PublicSubnet
+      - AppSecurityGroup
+    Properties:
+      InstanceType: t2.micro
+      ImageId: !Ref AmazonLinuxAMIID
+      NetworkInterfaces:
+        - AssociatePublicIpAddress: true
+          DeviceIndex: 0
+          GroupSet:
+            - !Ref AppSecurityGroup
+          SubnetId: !Ref PublicSubnet
+      Tags:
+        - Key: Name
+          Value: App Server
+
 ###########
 # Outputs
 ###########
@@ -125,3 +163,8 @@ Outputs:
 
   LabVPCDefaultSecurityGroup:
     Value: !Sub ${LabVPC.DefaultSecurityGroup}
+
+ # S3 Bucket Name   
+  S3BucketName:
+    Description: Name of the S3 bucket
+    Value: !Ref LabS3Bucket
