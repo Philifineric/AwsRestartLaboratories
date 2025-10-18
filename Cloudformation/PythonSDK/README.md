@@ -1,61 +1,63 @@
-# AWS CloudFormation SDK Project
+# AWS CloudFormation PythonSDK Project
 
-This project provides a Python SDK for interacting with AWS CloudFormation using the `boto3` library. It includes functionality to create, update, and delete CloudFormation stacks.
+This project demonstrates how to use the AWS Python SDK (`boto3`) to deploy AWS infrastructure using CloudFormation templates.
+
+## Features
+
+- Create, update, and delete CloudFormation stacks using Python
+- Example CloudFormation template for:
+  - VPC
+  - Internet Gateway
+  - Security Group (SSH access)
+  - Private Subnet
+  - EC2 Instance (t3.micro, Amazon Linux 2)
 
 ## Project Structure
 
 ```
-aws-cloudformation-sdk-project
-├── src
-│   ├── template.py        # Main logic for AWS SDK interactions
-│   └── utils
-│       └── __init__.py    # Utility functions for the project
-├── requirements.txt       # Project dependencies
-└── README.md              # Project documentation
+Cloudformation/
+└── PythonSDK/
+    ├── src/
+    │   ├── stack_manager.py
+    │   ├── deploy_stack.py
+    │   └── utils/
+    │       └── __init__.py
+    ├── templates/
+    │   └── vpc_stack.yaml
+    ├── .env
+    ├── requirements.txt
+    └── README.md
 ```
 
-## Setup Instructions
+## Getting Started
 
-1. **Clone the repository**:
-   ```
-   git clone <repository-url>
-   cd aws-cloudformation-sdk-project
-   ```
+1. **Install dependencies:**
+    ```bash
+    pip install -r requirements.txt
+    ```
 
-2. **Create a virtual environment** (optional but recommended):
-   ```
-   python -m venv venv
-   source venv/bin/activate  # On Windows use `venv\Scripts\activate`
-   ```
+2. **Configure AWS credentials:**
+    ```bash
+    aws configure
+    ```
 
-3. **Install dependencies**:
-   ```
-   pip install -r requirements.txt
-   ```
+3. **Set the template path in `.env`:**
+    ```
+    CF_TEMPLATE_PATH=path/to/templates/vpc_stack.yaml
+    ```
 
-## Usage
+4. **Deploy the stack:**
+    ```bash
+    cd src
+    python deploy_stack.py
+    ```
 
-To use the SDK, you can import the functions defined in `template.py` and utilize them to manage your CloudFormation stacks. 
+## Notes
 
-### Example
-
-```python
-from src.template import create_stack, update_stack, delete_stack
-
-# Create a CloudFormation stack
-create_stack(stack_name='MyStack', template_body='template.yaml')
-
-# Update a CloudFormation stack
-update_stack(stack_name='MyStack', template_body='updated_template.yaml')
-
-# Delete a CloudFormation stack
-delete_stack(stack_name='MyStack')
-```
-
-## Contributing
-
-Feel free to submit issues or pull requests for improvements or bug fixes. 
+- Make sure your AWS account is within the Free Tier limits.
+- Update the `ImageId` in the CloudFormation template for your AWS region.
+- The `.env` file is used to store environment variables and should not be committed to version control.
 
 ## License
 
-This project is licensed under the MIT License.
+MIT License
